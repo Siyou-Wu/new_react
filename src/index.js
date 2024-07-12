@@ -10,17 +10,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
 
-    <MyJsonViewer json={{
-      tier1_1: {
-        tier1_1_1: {
-          tier1_1_1_1: "33",
-          tier1_1_1_2: "44"
-        },
-        tier1_1_2: {
-          tier1_1_2_1: "55"
-        }
-      }
-    }} />
+    <MyJsonViewer/>
   </React.StrictMode>
 );
 

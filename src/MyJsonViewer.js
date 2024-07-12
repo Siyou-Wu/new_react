@@ -1,98 +1,66 @@
 import React, { useState } from 'react';
 
-function MyJsonViewer(jsonProps) {
-    // Get props
-    const json = jsonProps.json;
+function MyJsonViewer({json}) {
 
-    //build toggle expand variable for json object
-    const buildToggleExpand = (jsonObj) => {
-        if (typeof jsonObj !== 'object') {
-            return { expand: true };
-        }
-        const returnObj = {};
-        returnObj['expand'] = true;
-        returnObj['children'] = {};
-        // iterate through json object
-        Object.keys(jsonObj).forEach((key) => {
-            returnObj['children'][key] = buildToggleExpand(jsonObj[key]);
-        });
-        return returnObj;
-    };
-
-    const [expandRecorder, toggleExpand] = useState(buildToggleExpand(json));
-    console.log('expandRecorder', expandRecorder);
-    console.log('json', json);
-
-
-    const global_render_array = [];
-
-    const put_render_into_array = (obj, localExpandRecorder, layer, path) => {
-        if (localExpandRecorder.children === undefined) {
-            return null;
-        }
-        for (let key in localExpandRecorder.children) {
-            console.log('key and layer', key, layer);
-            global_render_array.push({ text: key, layer: layer, path: [...path, key]});
-            put_render_into_array(obj[key], localExpandRecorder.children[key], layer + 1, [...path, key]);
-        }
-    };
-
-    put_render_into_array(json, expandRecorder, 0,[]);
-
-    // for (let i = 0; i < global_render_array.length; i++) {
-    //     elements.push(
-    //       <div key={i} style={{ marginLeft: global_render_array[i].layer * 20 }}>
-    //         {global_render_array[i].text}
-    //       </div>
-    //     );
-    //   }
-
-    return (
-        <div>
+    const data =  [
+        {
+          isFolder: true,
+          name: "public",
+          children: [
             {
-                global_render_array.map((item, i) => (
-                    <div key={i} style={{ marginLeft: item.layer * 20 }}>
-                        {item.text}
-                        <button onClick={() => {
-                            console.log("click the path is ", item.path);
-                            
-                            const newExpandRecorder = expandRecorder;
-                            console.log("before changge ", newExpandRecorder)
-                            let temp = newExpandRecorder;
-                            for (let i = 0; i < item.path.length; i++) {
-                                temp = temp.children[item.path[i]];
-                            }
-                            temp.expand = !temp.expand;
-                            console.log("after change: ", newExpandRecorder)
-
-                            toggleExpand(newExpandRecorder);
-                        }}> {expandRecorder.children[item.text] ? '+' : '-'} </button>
+              isFolder: false,
+              name: "index.html",
+            },
+          ],
+        },
+        {
+          isFolder: true,
+          name: "src",
+          children: [
+            {
+              isFolder: true,
+              name: "components",
+              children: [
+                {
+                  isFolder: true,
+                  name: "home",
+                  children: [
+                    {
+                      isFolder: false,
+                      name: "Home.js",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              isFolder: false,
+              name: "App.js",
+            },
+          ],
+        },
+      ];
+    const RenderJson = ({data}) => {
+        return (
+            <div style={{ paddingLeft: "20px" }}>
+              {data.map((parent) => {
+                return (
+                  <div key={parent.name}>
+                    <span>{parent.name}</span>
+                    {/* Base Condition and Rendering recursive component from inside itself */}
+                    <div>
+                      {parent.children && <RenderJson data={parent.children} />}
                     </div>
-                ))
-            }
-        </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+    }
+ 
+    return (
+        RenderJson({data: data})
     );
 }
 
 export default MyJsonViewer;
-
-
-// // display json object, and add a button to toggle fold
-// return (
-//     <div>
-//         <button onClick={() => toggleExpand(localExpandRecorder['expand'])}>
-//             {localExpandRecorder['expand'] ? '+' : '-'}
-//         </button>
-//         <span>{key}:</span>
-//         {!localExpandRecorder['expand'] ? null : renderValue(value)}
-//         {
-//             Object.keys(obj).map((key) => {
-//                 if (key === 'expand') {
-//                     return null;
-//                 } else {
-//                     renderJson(obj[key], localExpandRecorder[key], layer + 1);
-//                 }
-//             })
-//         }
-//     </div>
-// );
