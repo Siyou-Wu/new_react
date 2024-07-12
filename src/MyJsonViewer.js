@@ -18,6 +18,7 @@ function MyJsonViewer(jsonProps) {
         });
         return returnObj;
     };
+
     const [expandRecorder, toggleExpand] = useState(buildToggleExpand(json));
     console.log('expandRecorder', expandRecorder);
     console.log('json', json);
@@ -53,12 +54,17 @@ function MyJsonViewer(jsonProps) {
                     <div key={i} style={{ marginLeft: item.layer * 20 }}>
                         {item.text}
                         <button onClick={() => {
+                            console.log("click the path is ", item.path);
+                            
                             const newExpandRecorder = expandRecorder;
+                            console.log("before changge ", newExpandRecorder)
                             let temp = newExpandRecorder;
                             for (let i = 0; i < item.path.length; i++) {
                                 temp = temp.children[item.path[i]];
                             }
                             temp.expand = !temp.expand;
+                            console.log("after change: ", newExpandRecorder)
+
                             toggleExpand(newExpandRecorder);
                         }}> {expandRecorder.children[item.text] ? '+' : '-'} </button>
                     </div>
