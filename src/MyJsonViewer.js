@@ -116,6 +116,31 @@ function MyJsonViewer({ json }) {
             }
         }
     };
+
+    const data1 = {
+        expand: true,
+        children: {
+            t1: {
+                expand: true,
+                children: {
+                    t1_1: {
+                        expand: true,
+                    },
+                    t1_2: {
+                        expand: true,
+                    }
+                }
+            },
+            t2: {
+                expand: true,
+                children: {
+                    t2_1: {
+                        expand: true
+                    }
+                }
+            }
+        }
+    }
     
     const data2 = {
         expand: true,
@@ -157,9 +182,11 @@ function MyJsonViewer({ json }) {
 
     const RenderJson2 = ({ data, layer }) => {
         
+        
         const [isExpanded, setIsExpanded] = useState(data.expand)
         const toggleExpand = () => {
             setIsExpanded(!isExpanded);
+            data.expand = isExpanded;
             console.log("current data, layer",layer, data)
         }
         return (
@@ -183,7 +210,7 @@ function MyJsonViewer({ json }) {
 
 
     return (
-        RenderJson2({ data: data3, layer: 0 })
+        RenderJson2({ data: data1, layer: 0 })
     );
 }
 
